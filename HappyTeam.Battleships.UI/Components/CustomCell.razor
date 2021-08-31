@@ -1,0 +1,33 @@
+﻿@using HappyTeam.Battleships.Services.Core.Enums
+
+<div class="cell">
+    @switch (State)
+    {
+        case CellStates.Empty:
+            <span class="value">E</span>
+            break;
+        case CellStates.Hit:
+        case CellStates.Ship:
+            <span class="value">X</span>
+            break;
+        case CellStates.Sunk:
+        case CellStates.Miss:
+            <span class="value">&bull;</span>
+            break;
+    }
+</div>
+
+@code {
+    [Parameter] public CellStates State { get; set; }
+}
+
+<style>
+    .cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+    }
+</style>

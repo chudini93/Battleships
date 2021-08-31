@@ -1,0 +1,108 @@
+﻿@page "/"
+@using HappyTeam.Battleships.Services.Core.Enums
+@using HappyTeam.Battleships.Services
+@using HappyTeam.Battleships.Services.Core.Models
+@using HappyTeam.Battleships.Services.Interfaces
+@inject IBattleshipGameService BattleshipGameService
+@inject ISimulatorService SimulatorService
+
+<div class="content">
+    <header><h1>@Title</h1></header>
+    <main>
+        @if (_game == null)
+        {
+            <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
+        }
+        else
+        {
+            <left>
+                <div class="title">Player 1</div>
+                <div class="board">
+                    @foreach (GridSpotModel cellItem in _game.Player1Board)
+                    {
+                        <CustomCell State="cellItem.Status"></CustomCell>
+                    }
+                </div>
+            </left>
+            <right>
+                <div class="title">Player 2</div>
+                <div class="board">
+                    @foreach (GridSpotModel cellItem in _game.Player2Board)
+                    {
+                        <CustomCell State="cellItem.Status"></CustomCell>
+                    }
+                </div>
+            </right>
+        }
+    </main>
+    @if (Logs.Any())
+    {
+        <footer>
+            <h3 class="font-weight-bold">Logs:</h3>
+            @foreach (string log in Logs)
+            {
+                <pre>@log</pre>
+            }
+        </footer>
+    }
+</div>
+
+@code
+{
+    private string Title { get; set; }
+    private IList<string> Logs = new List<string>();
+    private GameModel _game;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Title = "Battleships";
+    }
+
+    public async Task StartGame()
+    {
+        _game = BattleshipGameService.StartNewGame();
+        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Game has started");
+
+        await Task.Delay(2000);
+
+        SimulatorService.SimulateShipsPlacement(_game.Player1Board);
+        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player1 ships have been placed");
+
+        await Task.Delay(2000);
+
+        SimulatorService.SimulateShipsPlacement(_game.Player2Board);
+        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player2 ships have been placed");
+    }
+}
+
+<style>
+    .content {
+        display: grid;
+        row-gap: 30px;
+    }
+
+    main {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 30px;
+    }
+
+    footer {
+        height: 200px;
+    }
+
+    pre {
+        margin: 0;
+    }
+
+    .title {
+        font-size: 200%;
+        font-weight: bold;
+    }
+
+    .board {
+        display: grid;
+        grid-template-columns: repeat(10, 30px);
+        column-gap: 10px;
+    }
+</style>
