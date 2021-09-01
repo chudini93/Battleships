@@ -12,6 +12,9 @@ Based on the rules of Battleship board game (https://en.wikipedia.org/wiki/Battl
 The implementation contains following features:
 * Automatic placement of ships in random places after user hit Start Game. Both Vertical and Horizontal search algorithms are implemented 
 * It is possible to choose what type of a game will be played. (Currently configurable only via backend BattleshipGameService.StartNewGame by providing GameVersion from available options)
+* TODO: Simulation of a game
+* TODO: Displaying a winner
+* TODO: Restart game option
 
 ## Prerequisites
 * Visual Studio 2019
