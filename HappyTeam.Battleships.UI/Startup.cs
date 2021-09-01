@@ -1,10 +1,13 @@
+using HappyTeam.Battleships.Common;
+using HappyTeam.Battleships.Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HappyTeam.Battleships.Services;
-using HappyTeam.Battleships.Services.Interfaces;
+using IBattleshipGameService = HappyTeam.Battleships.Services.Interfaces.IBattleshipGameService;
+using IShipPlacementService = HappyTeam.Battleships.Services.Interfaces.IShipPlacementService;
 
 namespace HappyTeam.Battleships.UI
 {
@@ -23,8 +26,8 @@ namespace HappyTeam.Battleships.UI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<IBattleshipGameService, BattleshipGameService>();
-            services.AddScoped<IShipPlacementService, ShipPlacementService>();
+
+            services.ConfigureIoCContainer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

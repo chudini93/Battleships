@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HappyTeam.Battleships.Common.Interfaces;
 using HappyTeam.Battleships.Services.Core.Enums;
 using HappyTeam.Battleships.Services.Core.Models;
-using HappyTeam.Battleships.Services.Interfaces;
 using HappyTeam.Battleships.Services.Core.Extensions;
+using IShipPlacementService = HappyTeam.Battleships.Services.Interfaces.IShipPlacementService;
 
 namespace HappyTeam.Battleships.Services
 {
     public class ShipPlacementService : IShipPlacementService
     {
-        protected static Random Rnd = new Random();
+        private readonly IRandomService _randomService;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public ShipPlacementService(IRandomService randomService)
+        {
+            _randomService = randomService;
+        }
 
         public void PlaceShipsRandomly(Board board, IList<Ship> ships)
         {
@@ -77,7 +86,7 @@ namespace HappyTeam.Battleships.Services
 
         private SearchMethods GenerateRandomSearchMethod()
         {
-            return Rnd.NextDouble() >= 0.5 ? SearchMethods.Horizontal : SearchMethods.Vertical;
+            return _randomService.GenerateBool() ? SearchMethods.Horizontal : SearchMethods.Vertical;
         }
 
         private GridSpotModel ChooseRandomEmptyCell(IList<GridSpotModel> board)
@@ -226,13 +235,13 @@ namespace HappyTeam.Battleships.Services
 
         /// <summary>
         /// Return collection of coordinates with empty cells.
-        /// Search is performed in a straight line based on a <see cref="direction"/>
+        /// Search is performed in a straight line based on a <see cref="directions"/>
         /// </summary>
         /// <param name="board"></param>
         /// <param name="row">Start row</param>
         /// <param name="col">Start column</param>
         /// <param name="length">Relates to how far board should be searched</param>
-        /// <param name="directions>Direction in which search should be performed</param>
+        /// <param name="directions">Direction in which search should be performed</param>
         /// <returns></returns>
         private IList<Coordinate> SearchForEmptyCells(Board board, int row, int col, int length, SearchDirections directions)
         {

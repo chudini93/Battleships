@@ -7,12 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTeam.Battleships.UI", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTeam.Battleships.Services", "HappyTeam.Battleships.Services\HappyTeam.Battleships.Services.csproj", "{C34B7337-B1EB-4EDD-92EF-629214C485DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTeam.Battleships.Services.Core", "HappyTeam.Battleships.Services.Core\HappyTeam.Battleships.Services.Core.csproj", "{9B1C5092-7564-47A9-BB19-DF2F01600C6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTeam.Battleships.Services.Core", "HappyTeam.Battleships.Services.Core\HappyTeam.Battleships.Services.Core.csproj", "{9B1C5092-7564-47A9-BB19-DF2F01600C6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{51F4BABB-FE27-437A-9661-ADA68CF423D4}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTeam.Battleships.Common", "HappyTeam.Battleships.Common\HappyTeam.Battleships.Common.csproj", "{BE6CA47C-84CE-463F-8FF5-68280390DE33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{9B1C5092-7564-47A9-BB19-DF2F01600C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B1C5092-7564-47A9-BB19-DF2F01600C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B1C5092-7564-47A9-BB19-DF2F01600C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE6CA47C-84CE-463F-8FF5-68280390DE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6CA47C-84CE-463F-8FF5-68280390DE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6CA47C-84CE-463F-8FF5-68280390DE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6CA47C-84CE-463F-8FF5-68280390DE33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

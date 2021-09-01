@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HappyTeam.Battleships.Common\HappyTeam.Battleships.Common.csproj" />
     <ProjectReference Include="..\HappyTeam.Battleships.Services\HappyTeam.Battleships.Services.csproj" />
   </ItemGroup>
 

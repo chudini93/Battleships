@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HappyTeam.Battleships.Services.Core.Enums;
+﻿using HappyTeam.Battleships.Services.Core.Enums;
 using HappyTeam.Battleships.Services.Core.Models;
 using HappyTeam.Battleships.Services.Interfaces;
 
