@@ -4,8 +4,21 @@ namespace HappyTeam.Battleships.Services.Core.Models
 {
     public class GridSpotModel
     {
-        public char SpotLetter { get; set; }
-        public int SpotNumber { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+
+        public char RowLetter
+        {
+            get
+            {
+                char[] letters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' };
+
+                var output = letters[Row];
+                return output;
+            }
+        }
+
         public CellStates Status { get; set; } = CellStates.Empty;
+        public string ShipIdentifier { get; set; }
     }
 }

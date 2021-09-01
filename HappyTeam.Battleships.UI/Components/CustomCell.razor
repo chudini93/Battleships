@@ -4,11 +4,16 @@
     @switch (State)
     {
         case CellStates.Empty:
-            <span class="value">E</span>
+            <span class="value"></span>
             break;
         case CellStates.Hit:
-        case CellStates.Ship:
             <span class="value">X</span>
+            break;
+        case CellStates.Blocked:
+            <span class="value">B</span>
+            break;
+        case CellStates.Ship:
+            <span class="value">@ShipId</span>
             break;
         case CellStates.Sunk:
         case CellStates.Miss:
@@ -19,6 +24,7 @@
 
 @code {
     [Parameter] public CellStates State { get; set; }
+    [Parameter] public string ShipId { get; set; }
 }
 
 <style>

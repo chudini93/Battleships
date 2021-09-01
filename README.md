@@ -9,6 +9,10 @@
 ## Overview
 Based on the rules of Battleship board game (https://en.wikipedia.org/wiki/Battleship_(game)) randomly places ships on two boards and simulates the gameplay between 2 players.
 
+The implementation contains following features:
+* Automatic placement of ships in random places after user hit Start Game. Both Vertical and Horizontal search algorithms are implemented 
+* It is possible to choose what type of a game will be played. (Currently configurable only via backend BattleshipGameService.StartNewGame by providing GameVersion from available options)
+
 ## Prerequisites
 * Visual Studio 2019
 * .NET Core 5.0

@@ -1,4 +1,5 @@
-﻿using HappyTeam.Battleships.Services.Core.Enums;
+﻿using System.Collections.Generic;
+using HappyTeam.Battleships.Services.Core.Enums;
 using HappyTeam.Battleships.Services.Core.Models;
 using HappyTeam.Battleships.Services.Interfaces;
 
@@ -18,13 +19,31 @@ namespace HappyTeam.Battleships.Services
         /// </summary>
         private const int BOARD_HEIGHT = 10;
 
-        public GameModel StartNewGame()
+        /// <summary>
+        /// Game state.
+        /// </summary>
+        private GameModel _game;
+
+        private readonly IShipPlacementService _shipPlacementService;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public BattleshipGameService(IShipPlacementService shipPlacementService)
+        {
+            _shipPlacementService = shipPlacementService;
+        }
+
+        public GameModel StartNewGame(GameVersions version)
         {
             var output = new GameModel
             {
                 Player1Board = GenerateEmptyBoard(BOARD_WIDTH, BOARD_HEIGHT),
-                Player2Board = GenerateEmptyBoard(BOARD_WIDTH, BOARD_HEIGHT)
+                Player2Board = GenerateEmptyBoard(BOARD_WIDTH, BOARD_HEIGHT),
+                Fleet = version == GameVersions.Milton ? ShipFleet.MiltonBradleyVersion : ShipFleet.HasbroVersion
             };
+
+            _game = output;
 
             return output;
         }
@@ -38,24 +57,30 @@ namespace HappyTeam.Battleships.Services
         private Board GenerateEmptyBoard(int width, int height)
         {
             var output = new Board();
-
-            // TODO: Rewrite it to something smarter without the need for manual placement of chars inside char.
-            char[] xRowNames = new [] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'Q', 'R', 'S', 'T', 'U', 'V', 'W'};
-
-            for (int y = 1; y <= height ; y++)
+            
+            for (int y = 1; y <= width; y++)
             {
-                for (int x = 1; x <= width; x++)
+                for (int x = 1; x <= height; x++)
                 {
                     output.Add(new GridSpotModel
                     {
-                        SpotLetter = xRowNames[x-1],
-                        SpotNumber = y,
+                        Row = y,
+                        Column = x,
                         Status = CellStates.Empty
                     });
                 }
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Places battleships on a provided board automatically.
+        /// </summary>
+        /// <param name="board">Board to place ships to</param>
+        public void PlaceShipsRandomly(Board board)
+        {
+            this._shipPlacementService.PlaceShipsRandomly(board, _game.Fleet);
         }
     }
 }

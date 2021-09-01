@@ -3,6 +3,7 @@
     public enum CellStates
     {
         Empty,
+        Blocked,
         Ship,
         Miss,
         Hit,

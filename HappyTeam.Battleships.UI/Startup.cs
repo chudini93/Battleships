@@ -24,7 +24,7 @@ namespace HappyTeam.Battleships.UI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<IBattleshipGameService, BattleshipGameService>();
-            services.AddScoped<ISimulatorService, SimulatorService>();
+            services.AddScoped<IShipPlacementService, ShipPlacementService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

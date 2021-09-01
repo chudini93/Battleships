@@ -4,7 +4,6 @@
 @using HappyTeam.Battleships.Services.Core.Models
 @using HappyTeam.Battleships.Services.Interfaces
 @inject IBattleshipGameService BattleshipGameService
-@inject ISimulatorService SimulatorService
 
 <div class="content">
     <header><h1>@Title</h1></header>
@@ -20,7 +19,7 @@
                 <div class="board">
                     @foreach (GridSpotModel cellItem in _game.Player1Board)
                     {
-                        <CustomCell State="cellItem.Status"></CustomCell>
+                        <CustomCell State="cellItem.Status" ShipId="@cellItem.ShipIdentifier"></CustomCell>
                     }
                 </div>
             </left>
@@ -29,7 +28,7 @@
                 <div class="board">
                     @foreach (GridSpotModel cellItem in _game.Player2Board)
                     {
-                        <CustomCell State="cellItem.Status"></CustomCell>
+                        <CustomCell State="cellItem.Status" ShipId="@cellItem.ShipIdentifier"></CustomCell>
                     }
                 </div>
             </right>
@@ -60,17 +59,17 @@
 
     public async Task StartGame()
     {
-        _game = BattleshipGameService.StartNewGame();
+        _game = BattleshipGameService.StartNewGame(GameVersions.Milton);
         Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Game has started");
 
         await Task.Delay(2000);
 
-        SimulatorService.SimulateShipsPlacement(_game.Player1Board);
+        BattleshipGameService.PlaceShipsRandomly(_game.Player1Board);
         Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player1 ships have been placed");
 
         await Task.Delay(2000);
 
-        SimulatorService.SimulateShipsPlacement(_game.Player2Board);
+        BattleshipGameService.PlaceShipsRandomly(_game.Player2Board);
         Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player2 ships have been placed");
     }
 }

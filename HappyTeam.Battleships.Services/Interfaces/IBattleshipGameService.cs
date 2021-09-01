@@ -1,4 +1,5 @@
-﻿using HappyTeam.Battleships.Services.Core.Models;
+﻿using HappyTeam.Battleships.Services.Core.Enums;
+using HappyTeam.Battleships.Services.Core.Models;
 
 namespace HappyTeam.Battleships.Services.Interfaces
 {
@@ -12,6 +13,8 @@ namespace HappyTeam.Battleships.Services.Interfaces
         /// Returns empty boards for two players.
         /// </summary>
         /// <returns></returns>
-        GameModel StartNewGame();
+        GameModel StartNewGame(GameVersions version);
+
+        void PlaceShipsRandomly(Board board);
     }
 }
