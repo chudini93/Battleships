@@ -15,8 +15,9 @@ namespace HappyTeam.Battleships.UI
 
         private static void ConfigureServices(this IServiceCollection services)
         {
-            services.AddScoped<IBattleshipGameService, BattleshipGameService>();
+            services.AddScoped<IGameService, GameService>();
             services.AddScoped<IShipPlacementService, ShipPlacementService>();
+            services.AddScoped<IBattleshipService, BattleshipService>();
             services.AddScoped<IRandomService, RandomService>();
         }
     }

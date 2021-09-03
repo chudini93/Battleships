@@ -4,20 +4,18 @@
     @switch (State)
     {
         case CellStates.Empty:
-            <span class="value"></span>
+            <span></span>
             break;
         case CellStates.Hit:
-            <span class="value">X</span>
-            break;
-        case CellStates.Blocked:
-            <span class="value">B</span>
+        case CellStates.Sunk:
+            <span class="hit">X</span>
             break;
         case CellStates.Ship:
-            <span class="value">@ShipName</span>
+            <span>@ShipName</span>
             break;
-        case CellStates.Sunk:
+        case CellStates.Blocked:
         case CellStates.Miss:
-            <span class="value">&bull;</span>
+            <span>&bull;</span>
             break;
     }
 </div>
@@ -35,5 +33,9 @@
         border: 1px solid black;
         width: 40px;
         height: 40px;
+    }
+
+    .hit {
+        color: darkred;
     }
 </style>

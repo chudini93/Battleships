@@ -5,8 +5,54 @@ using HappyTeam.Battleships.Services.Core.Extensions;
 
 namespace HappyTeam.Battleships.Services.Core.Models
 {
-    public class Board : List<GridSpotModel>
+    public class Board : List<CellInfo>
     {
+        /// <summary>
+        /// Destroys selected ship from a board and blocks space around.
+        /// </summary>
+        /// <param name="shipId"></param>
+        public void SunkShip(string shipId)
+        {
+            IList<CellInfo> coords = this.GetShipCoordinates(shipId);
+            foreach (CellInfo cellInfo in coords)
+            {
+                cellInfo.Status = CellStates.Sunk;
+            }
+
+            BlockSpaceAround(coords);
+        }
+
+        /// <summary>
+        /// Block cells around provided coordinates.
+        /// </summary>
+        /// <param name="targetCells"></param>
+        public void BlockSpaceAround(IList<CellInfo> targetCells)
+        {
+            IList<Coordinate> coordinates = targetCells.Select(x => new Coordinate(x)).ToList();
+            BlockSpaceAround(coordinates);
+        }
+
+        /// <summary>
+        /// Block cells around provided coordinates.
+        /// </summary>
+        /// <param name="targetCells"></param>
+        public void BlockSpaceAround(IList<Coordinate> targetCells)
+        {
+            int minRow = targetCells.Min(x => x.Row);
+            int maxRow = targetCells.Max(x => x.Row);
+
+            int minCol = targetCells.Min(x => x.Column);
+            int maxCol = targetCells.Max(x => x.Column);
+
+            for (int y = minRow; y <= maxRow; y++)
+            {
+                for (int x = minCol; x <= maxCol; x++)
+                {
+                    BlockAround(x, y);
+                }
+            }
+        }
+
         /// <summary>
         /// Block around 
         /// </summary>
@@ -37,7 +83,7 @@ namespace HappyTeam.Battleships.Services.Core.Models
         /// <param name="row"></param>
         private void BlockCellIfPossible(int column, int row)
         {
-            GridSpotModel emptyCell = this.AllEmptyCells().FirstOrDefault(x => x.Column == column && x.Row == row);
+            CellInfo emptyCell = this.AllEmptyCells().FirstOrDefault(x => x.Column == column && x.Row == row);
             if (emptyCell == null)
             {
                 // Can't be blocked - because not empty.

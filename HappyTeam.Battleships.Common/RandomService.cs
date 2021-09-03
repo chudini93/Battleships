@@ -11,5 +11,10 @@ namespace HappyTeam.Battleships.Common
         {
             return Rnd.NextDouble() >= 0.5;
         }
+
+        public int GenerateInt(int max, int min = 0)
+        {
+            return Rnd.Next(min, max);
+        }
     }
 }

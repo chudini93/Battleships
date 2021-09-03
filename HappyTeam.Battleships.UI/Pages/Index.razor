@@ -1,44 +1,44 @@
 ﻿@page "/"
 @using HappyTeam.Battleships.Services.Core.Enums
-@using HappyTeam.Battleships.Services
 @using HappyTeam.Battleships.Services.Core.Models
 @using HappyTeam.Battleships.Services.Interfaces
-@inject IBattleshipGameService BattleshipGameService
+@inject IGameService GameService
 
+<header><h1>@Title</h1></header>
+@if (GameService.IsStarted)
+{
+    <h3>Turn: <b>@GameService.Turn.ToString()</b></h3>
+}
+@if(GameService.IsGameOver || !GameService.IsStarted)
+{
+    <button class="btn btn-primary" @onclick="StartGameAsync">Start New Game</button>
+}
 <div class="content">
-    <header><h1>@Title</h1></header>
-    <main>
-        @if (_game == null)
-        {
-            <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
-        }
-        else
-        {
+    @if (GameService.IsStarted)
+    {
+        <main>
             <left>
-                <div class="title">Player 1</div>
+                <div class="title">@GameService.Player1.Name</div>
                 <div class="board">
-                    @foreach (GridSpotModel cellItem in _game.Player1Board)
+                    @foreach (CellInfo cellItem in GameService.Player1.Board)
                     {
                         <CustomCell State="cellItem.Status" ShipName="@cellItem.ShipLabel"></CustomCell>
                     }
                 </div>
             </left>
             <right>
-                <div class="title">Player 2</div>
+                <div class="title">@GameService.Player2.Name</div>
                 <div class="board">
-                    @foreach (GridSpotModel cellItem in _game.Player2Board)
+                    @foreach (CellInfo cellItem in GameService.Player2.Board)
                     {
                         <CustomCell State="cellItem.Status" ShipName="@cellItem.ShipLabel"></CustomCell>
                     }
                 </div>
             </right>
-        }
-    </main>
-    @if (Logs.Any())
-    {
+        </main>
         <footer>
             <h3 class="font-weight-bold">Logs:</h3>
-            @foreach (string log in Logs)
+            @foreach (string log in GameService.Logs.Reverse())
             {
                 <pre>@log</pre>
             }
@@ -48,60 +48,53 @@
 
 @code
 {
+    private int _thinkingTimeInMilliseconds;
+
     private string Title { get; set; }
-    private IList<string> Logs = new List<string>();
-    private GameModel _game;
 
     protected override async Task OnInitializedAsync()
     {
         Title = "Battleships";
+        _thinkingTimeInMilliseconds = 100;
     }
 
-    public async Task StartGame()
+    public async Task StartGameAsync()
     {
-        _game = BattleshipGameService.StartNewGame(GameVersions.Milton);
-        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Game has started");
+        GameService.StartNewGame(GameVersions.Milton);
+        await WaitAndRefreshUI(1000);
 
-        await Task.Delay(2000);
+        GameService.PlaceShipsRandomly(GameService.Player1);
+        await WaitAndRefreshUI(2000);
+        GameService.PlaceShipsRandomly(GameService.Player2);
 
-        BattleshipGameService.PlaceShipsRandomly(_game.Player1Board);
-        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player1 ships have been placed");
+        await WaitAndRefreshUI(5000);
 
-        await Task.Delay(2000);
+        await SimulateGameplayAsync(_thinkingTimeInMilliseconds);
+    }
 
-        BattleshipGameService.PlaceShipsRandomly(_game.Player2Board);
-        Logs.Add($"{DateTime.Now.ToString("HH:mm:ss")}: Player2 ships have been placed");
+    public async Task SimulateGameplayAsync(int thinkingTimeInMilliseconds)
+    {
+        do
+        {
+            switch (GameService.Turn)
+            {
+                case Players.Player1:
+                    GameService.FireRandomly(GameService.Player2);
+                    break;
+                case Players.Player2:
+                    GameService.FireRandomly(GameService.Player1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            await WaitAndRefreshUI(thinkingTimeInMilliseconds);
+        } while (!GameService.IsGameOver);
+    }
+
+    private async Task WaitAndRefreshUI(int timeInMilliseconds)
+    {
+        await Task.Delay(timeInMilliseconds);
+        StateHasChanged();
     }
 }
-
-<style>
-    .content {
-        display: grid;
-        row-gap: 30px;
-    }
-
-    main {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 30px;
-    }
-
-    footer {
-        height: 200px;
-    }
-
-    pre {
-        margin: 0;
-    }
-
-    .title {
-        font-size: 200%;
-        font-weight: bold;
-    }
-
-    .board {
-        display: grid;
-        grid-template-columns: repeat(10, 30px);
-        column-gap: 10px;
-    }
-</style>

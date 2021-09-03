@@ -2,7 +2,7 @@
 
 namespace HappyTeam.Battleships.Services.Core.Models
 {
-    public class GridSpotModel
+    public class CellInfo
     {
         public int Row { get; set; }
         public int Column { get; set; }
@@ -19,7 +19,7 @@ namespace HappyTeam.Battleships.Services.Core.Models
         }
 
         public CellStates Status { get; set; } = CellStates.Empty;
-        public string ShipIdentifier { get; set; }
+        public string ShipId { get; set; }
         public string ShipLabel { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HappyTeam.Battleships.Services;
-using IBattleshipGameService = HappyTeam.Battleships.Services.Interfaces.IBattleshipGameService;
 using IShipPlacementService = HappyTeam.Battleships.Services.Interfaces.IShipPlacementService;
 
 namespace HappyTeam.Battleships.UI

@@ -43,7 +43,7 @@ namespace HappyTeam.Battleships.Services
 
                     for (; !isPlaced && loopCounter != 1000; ++loopCounter)
                     {
-                        GridSpotModel emptyCell = ChooseRandomEmptyCell(board);
+                        CellInfo emptyCell = ChooseRandomEmptyCell(board);
                         isPlaced = TryToPlaceShip(board, emptyCell, ship, shipNumber);
                     }
 
@@ -60,13 +60,13 @@ namespace HappyTeam.Battleships.Services
 
         private void CleanBlockedCells(Board board)
         {
-            IEnumerable<GridSpotModel> blockedCells = board.Where(x => x.Status == CellStates.Blocked).AsEnumerable();
+            IEnumerable<CellInfo> blockedCells = board.Where(x => x.Status == CellStates.Blocked).AsEnumerable();
 
-            foreach (GridSpotModel cell in blockedCells) 
+            foreach (CellInfo cell in blockedCells) 
                 cell.Status = CellStates.Empty;
         }
 
-        private bool TryToPlaceShip(Board board, GridSpotModel cell, Ship ship, int shipIndex)
+        private bool TryToPlaceShip(Board board, CellInfo cell, Ship ship, int shipIndex)
         {
             SearchMethods searchMethods = GenerateRandomSearchMethod();
 
@@ -89,19 +89,15 @@ namespace HappyTeam.Battleships.Services
             return _randomService.GenerateBool() ? SearchMethods.Horizontal : SearchMethods.Vertical;
         }
 
-        private GridSpotModel ChooseRandomEmptyCell(IList<GridSpotModel> board)
+        private CellInfo ChooseRandomEmptyCell(IList<CellInfo> board)
         {
             try
             {
                 var emptyCells = board.Where(x => x.Status == CellStates.Empty).ToList();
+                
+                int emptyCellIndex = _randomService.GenerateInt(emptyCells.Count);
 
-                int min = 0;
-                int max = emptyCells.Count;
-                var rand = new Random();
-
-                int emptyCellIndex = rand.Next(min, max);
-
-                GridSpotModel output = emptyCells[emptyCellIndex];
+                CellInfo output = emptyCells[emptyCellIndex];
                 return output;
             }
             catch
@@ -131,7 +127,7 @@ namespace HappyTeam.Battleships.Services
                 IList<Coordinate> validCoordinates = FindCoordinatesForShipPlacement(board, column, row, ship.Size, searchMethods);
 
                 PlaceShip(board, validCoordinates, ship, shipIndex);
-                BlockSpaceAround(board, validCoordinates);
+                board.BlockSpaceAround(validCoordinates);
 
                 return true;
             }
@@ -155,37 +151,15 @@ namespace HappyTeam.Battleships.Services
 
             foreach (Coordinate coordinate in coordinates)
             {
-                GridSpotModel cell = board.Get(coordinate.Col, coordinate.Row);
+                CellInfo cell = board.Get(coordinate.Column, coordinate.Row);
 
                 cell.Status = CellStates.Ship;
-                cell.ShipIdentifier = ship.BuildIdentifier(shipIndex);
+                cell.ShipId = ship.BuildIdentifier(shipIndex);
                 cell.ShipLabel = ship.Label;
 
                 shipSizeRemaining--;
                 if (shipSizeRemaining == 0)
                     break;
-            }
-        }
-
-        /// <summary>
-        /// Block cells around provided coordinates.
-        /// </summary>
-        /// <param name="board"></param>
-        /// <param name="targetCells"></param>
-        private void BlockSpaceAround(Board board, IList<Coordinate> targetCells)
-        {
-            int minRow = targetCells.Min(x => x.Row);
-            int maxRow = targetCells.Max(x => x.Row);
-
-            int minCol = targetCells.Min(x => x.Col);
-            int maxCol = targetCells.Max(x => x.Col);
-
-            for (int y = minRow; y <= maxRow; y++)
-            {
-                for (int x = minCol; x <= maxCol; x++)
-                {
-                    board.BlockAround(x, y);
-                }
             }
         }
 

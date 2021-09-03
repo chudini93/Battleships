@@ -1,0 +1,31 @@
+﻿.content {
+    display: grid;
+    row-gap: 30px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 30px;
+}
+
+footer {
+    height: 300px;
+    overflow: auto;
+}
+
+pre {
+    margin: 0;
+}
+
+.title {
+    font-size: 200%;
+    font-weight: bold;
+    color: black;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    column-gap: 10px;
+}

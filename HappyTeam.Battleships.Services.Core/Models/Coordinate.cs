@@ -3,12 +3,18 @@
     public class Coordinate
     {
         public int Row { get; set; }
-        public int Col { get; set; }
+        public int Column { get; set; }
 
-        public Coordinate(int col, int row)
+        public Coordinate(int column, int row)
         {
-            Col = col;
+            Column = column;
             Row = row;
+        }
+
+        public Coordinate(CellInfo cellInfo)
+        {
+            Column = cellInfo.Column;
+            Row = cellInfo.Row;
         }
     }
 }
