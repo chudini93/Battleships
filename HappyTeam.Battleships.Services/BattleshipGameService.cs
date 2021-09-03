@@ -33,6 +33,10 @@ namespace HappyTeam.Battleships.Services
             _shipPlacementService = shipPlacementService;
         }
 
+        /// <summary>
+        /// Returns empty boards for two players.
+        /// </summary>
+        /// <returns></returns>
         public GameModel StartNewGame(GameVersions version)
         {
             var output = new GameModel

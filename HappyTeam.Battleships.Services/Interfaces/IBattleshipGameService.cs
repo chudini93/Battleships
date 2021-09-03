@@ -15,6 +15,10 @@ namespace HappyTeam.Battleships.Services.Interfaces
         /// <returns></returns>
         GameModel StartNewGame(GameVersions version);
 
+        /// <summary>
+        /// Places battleships on a provided board automatically.
+        /// </summary>
+        /// <param name="board">Board to place ships to</param>
         void PlaceShipsRandomly(Board board);
     }
 }
