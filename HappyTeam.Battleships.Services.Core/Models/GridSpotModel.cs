@@ -20,5 +20,6 @@ namespace HappyTeam.Battleships.Services.Core.Models
 
         public CellStates Status { get; set; } = CellStates.Empty;
         public string ShipIdentifier { get; set; }
+        public string ShipLabel { get; set; }
     }
 }

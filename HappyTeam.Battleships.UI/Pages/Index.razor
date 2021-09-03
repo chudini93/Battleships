@@ -19,7 +19,7 @@
                 <div class="board">
                     @foreach (GridSpotModel cellItem in _game.Player1Board)
                     {
-                        <CustomCell State="cellItem.Status" ShipId="@cellItem.ShipIdentifier"></CustomCell>
+                        <CustomCell State="cellItem.Status" ShipName="@cellItem.ShipLabel"></CustomCell>
                     }
                 </div>
             </left>
@@ -28,7 +28,7 @@
                 <div class="board">
                     @foreach (GridSpotModel cellItem in _game.Player2Board)
                     {
-                        <CustomCell State="cellItem.Status" ShipId="@cellItem.ShipIdentifier"></CustomCell>
+                        <CustomCell State="cellItem.Status" ShipName="@cellItem.ShipLabel"></CustomCell>
                     }
                 </div>
             </right>

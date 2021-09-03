@@ -5,7 +5,7 @@ using HappyTeam.Battleships.Common.Interfaces;
 using HappyTeam.Battleships.Services.Core.Enums;
 using HappyTeam.Battleships.Services.Core.Models;
 using HappyTeam.Battleships.Services.Core.Extensions;
-using IShipPlacementService = HappyTeam.Battleships.Services.Interfaces.IShipPlacementService;
+using HappyTeam.Battleships.Services.Interfaces;
 
 namespace HappyTeam.Battleships.Services
 {
@@ -44,7 +44,7 @@ namespace HappyTeam.Battleships.Services
                     for (; !isPlaced && loopCounter != 1000; ++loopCounter)
                     {
                         GridSpotModel emptyCell = ChooseRandomEmptyCell(board);
-                        isPlaced = TryToPlaceShip(board, emptyCell, ship);
+                        isPlaced = TryToPlaceShip(board, emptyCell, ship, shipNumber);
                     }
 
                     if (loopCounter == 1000)
@@ -66,11 +66,11 @@ namespace HappyTeam.Battleships.Services
                 cell.Status = CellStates.Empty;
         }
 
-        private bool TryToPlaceShip(Board board, GridSpotModel cell, Ship ship)
+        private bool TryToPlaceShip(Board board, GridSpotModel cell, Ship ship, int shipIndex)
         {
             SearchMethods searchMethods = GenerateRandomSearchMethod();
 
-            bool isPlaced = PlaceShipOnValidSpot(board, cell.Column, cell.Row, ship, searchMethods);
+            bool isPlaced = PlaceShipOnValidSpot(board, cell.Column, cell.Row, ship, shipIndex, searchMethods);
 
             if (isPlaced)
                 return true;
@@ -79,7 +79,7 @@ namespace HappyTeam.Battleships.Services
                 ? SearchMethods.Vertical
                 : SearchMethods.Horizontal;
 
-            isPlaced = PlaceShipOnValidSpot(board, cell.Column, cell.Row, ship, otherMethods);
+            isPlaced = PlaceShipOnValidSpot(board, cell.Column, cell.Row, ship, shipIndex, otherMethods);
 
             return isPlaced;
         }
@@ -121,15 +121,16 @@ namespace HappyTeam.Battleships.Services
         /// <param name="column"></param>
         /// <param name="row"></param>
         /// <param name="ship">Ship to place on a board</param>
+        /// <param name="shipIndex"></param>
         /// <param name="searchMethods"></param>
         /// <returns></returns>
-        private bool PlaceShipOnValidSpot(Board board, int column, int row, Ship ship, SearchMethods searchMethods)
+        private bool PlaceShipOnValidSpot(Board board, int column, int row, Ship ship, int shipIndex, SearchMethods searchMethods)
         {
             try
             {
                 IList<Coordinate> validCoordinates = FindCoordinatesForShipPlacement(board, column, row, ship.Size, searchMethods);
 
-                PlaceShip(board, validCoordinates, ship);
+                PlaceShip(board, validCoordinates, ship, shipIndex);
                 BlockSpaceAround(board, validCoordinates);
 
                 return true;
@@ -147,7 +148,8 @@ namespace HappyTeam.Battleships.Services
         /// <param name="board"></param>
         /// <param name="coordinates">Coordinates to place ship onto</param>
         /// <param name="ship"></param>
-        private void PlaceShip(Board board, IList<Coordinate> coordinates, Ship ship)
+        /// <param name="shipIndex"></param>
+        private void PlaceShip(Board board, IList<Coordinate> coordinates, Ship ship, int shipIndex)
         {
             int shipSizeRemaining = ship.Size;
 
@@ -156,7 +158,8 @@ namespace HappyTeam.Battleships.Services
                 GridSpotModel cell = board.Get(coordinate.Col, coordinate.Row);
 
                 cell.Status = CellStates.Ship;
-                cell.ShipIdentifier = ship.Identifier;
+                cell.ShipIdentifier = ship.BuildIdentifier(shipIndex);
+                cell.ShipLabel = ship.Label;
 
                 shipSizeRemaining--;
                 if (shipSizeRemaining == 0)
@@ -260,9 +263,9 @@ namespace HappyTeam.Battleships.Services
         }
 
         /// <summary>
-        /// Moves pointer to a column and row based on <see cref="direction"/>
+        /// Moves pointer to a column and row based on <see cref="directions"/>
         /// </summary>
-        /// <param name="directions>Direction in which pointer should move.</param>
+        /// <param name="directions">Direction in which pointer should move.</param>
         /// <param name="column"></param>
         /// <param name="row"></param>
         /// <returns></returns>

@@ -18,11 +18,6 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Shortened Identifier for a ship.
-        /// </summary>
-        public string Identifier => Name[0].ToString() + Size;
-
-        /// <summary>
         /// Size of a ship (in cells).
         /// </summary>
         public int Size { get; set; }
@@ -31,5 +26,17 @@
         /// Number of total ships on the board.
         /// </summary>
         public int NumberOfShips { get; set; }
+
+        public string Label => Name[0].ToString() + Size;
+
+        /// <summary>
+        /// Returns ship identifier for single ship.
+        /// </summary>
+        /// <param name="index">Relates to exact ship of the same type.</param>
+        /// <returns></returns>
+        public string BuildIdentifier(int index)
+        {
+            return $"{Label}-{index}";
+        }
     }
 }
